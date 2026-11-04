@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECHO | Personal Knowledge Space</title>
+
+```
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+```
+
+</head>
+
+<body>
+
+```
+<div class="container">
+
+    <header>
+        <h1>ECHO</h1>
+        <p>Your Personal Knowledge Space</p>
+        <span>Capture your thoughts. Preserve your knowledge.</span>
+
+        <div class="account-bar">
+            <p>Welcome, {{ session.get('username') }}!</p>
+
+            <form action="{{ url_for('logout') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- CREATE NOTE -->
+
+    <section class="note-form">
+
+        <h2>Create a New Note</h2>
+
+        <form action="{{ url_for('add_note') }}" method="POST">
+
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Enter note title"
+                maxlength="100"
+                required
+            >
+
+            <textarea
+                name="content"
+                placeholder="Write your thoughts here..."
+                maxlength="5000"
+                rows="5"
+                required
+            ></textarea>
+
+            <button type="submit">Save Note</button>
+
+        </form>
+
+    </section>
+
+    <!-- SEARCH NOTES -->
+
+    <section class="search-section">
+
+        <form action="{{ url_for('search_notes') }}"
+              method="GET"
+              class="search-form">
+
+            <input
+                type="text"
+                name="keyword"
+                placeholder="Search your notes..."
+                value="{{ search_keyword|default('') }}"
+            >
+
+            <button type="submit">Search</button>
+
+            <a href="{{ url_for('home') }}">Show All</a>
+
+        </form>
+
+    </section>
+
+    <!-- DISPLAY NOTES -->
+
+    <section class="notes-section">
+
+        <h2>Your Notes</h2>
+
+        {% if notes %}
+
+            <div class="notes-grid">
+
+                {% for note in notes %}
+
+                    <div class="note-card">
+
+                        <h3>{{ note['title'] }}</h3>
+
+                        <p>{{ note['content'] }}</p>
+
+                        <div class="note-actions">
+
+                            <a
+                                href="{{ url_for('edit_note', note_id=note['id']) }}"
+                                class="edit-button">
+                                Edit
+                            </a>
+
+                            <form
+                                action="{{ url_for('delete_note', note_id=note['id']) }}"
+                                method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this note?');">
+
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                                <button
+                                    type="submit"
+                                    class="delete-button">
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="empty-message">
+                No notes available. Your thoughts begin here.
+            </p>
+
+        {% endif %}
+
+    </section>
+
+    <footer>
+        <p>ECHO | Your thoughts deserve a place.</p>
+    </footer>
+
+</div>
+```
+
+</body>
+</html>

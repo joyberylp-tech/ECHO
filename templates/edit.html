@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Edit Note | ECHO</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+```
+
+</head>
+
+<body>
+
+```
+<div class="container">
+
+    <header>
+        <h1>ECHO</h1>
+        <p>Edit Your Note</p>
+        <span>Logged in as {{ session.get('username') }}</span>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="note-form">
+
+        <h2>Update Note</h2>
+
+        <form method="POST">
+
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <input
+                type="text"
+                name="title"
+                value="{{ note['title'] }}"
+                maxlength="100"
+                required
+            >
+
+            <textarea
+                name="content"
+                maxlength="5000"
+                rows="7"
+                required
+            >{{ note['content'] }}</textarea>
+
+            <button type="submit">Update Note</button>
+
+            <a href="{{ url_for('home') }}"
+               class="cancel-button">
+                Cancel
+            </a>
+
+        </form>
+
+    </section>
+
+</div>
+```
+
+</body>
+</html>
