@@ -60,3 +60,10 @@ Deployment configuration:
 ## GitHub Repository
 
 https://github.com/joyberylp-tech/ECHO
+## Application Preview
+
+![ECHO Homepage](echo-homepage.png)
+
+## Live Demo
+
+[Open ECHO](https://JoyBerylPrabhu.pythonanywhere.com)
